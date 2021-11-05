@@ -1,5 +1,9 @@
 package heat.ecs;
 
+/**
+    A container for all entities and components.
+
+**/
 class World {
     var classComs = new Map<String, Map<EntityId, Dynamic>>();
     var enumComs = new Map<String, Map<EntityId, Dynamic>>();
