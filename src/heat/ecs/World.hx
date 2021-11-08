@@ -97,8 +97,7 @@ class World {
     public function setClassCom<T>(cls:Class<T>, id:EntityId, com:T):World {
         var name = Type.getClassName(cls);
         if (!classComs.exists(name)) {
-            trace('Tried to set class $name before registering it.');
-            return this;
+            registerCom(CLASS(cls));
         }
         classComs[name][id] = com;
         addedComSignalEmitter.emit({
@@ -111,8 +110,7 @@ class World {
     public function setEnumCom<T>(enm:Enum<T>, id:EntityId, com:T):World {
         var name = Type.getEnumName(enm);
         if (!enumComs.exists(name)) {
-            trace('Tried to set enum $name before registering it.');
-            return this;
+            registerCom(ENUM(enm));
         }
         enumComs[name][id] = com;
         addedComSignalEmitter.emit({
@@ -124,8 +122,7 @@ class World {
 
     public function setDynCom(typeId:String, id:EntityId, com:Dynamic):World {
         if (!dynComs.exists(typeId)) {
-            trace('Tried to set dyn com $typeId before registering it.');
-            return this;
+            registerCom(DYN(typeId));
         }
         dynComs[typeId][id] = com;
         addedComSignalEmitter.emit({
