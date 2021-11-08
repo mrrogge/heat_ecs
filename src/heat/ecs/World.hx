@@ -19,7 +19,7 @@ class World {
     }
 
     public function getId():EntityId {
-        return lastIntId++;
+        return ++lastIntId;
     }
 
     public function registerCom<TClass, TEnum>
