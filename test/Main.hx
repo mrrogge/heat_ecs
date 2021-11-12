@@ -12,6 +12,28 @@ enum TestEnum1 {
     TEST;
 }
 
+abstract TestAbstract(Float) from Float to Float {
+    public inline function new() {
+        this = 1;
+    }
+}
+
+typedef TestPoint = {x:Float, y:Float};
+
+
+@:build(heat.ecs.WorldBuilder.registerComType(1, "LABEL"))
+@:build(heat.ecs.WorldBuilder.registerComType(new TestAbstract()))
+@:build(heat.ecs.WorldBuilder.registerComType({x:1, y:2}))
+@:build(heat.ecs.WorldBuilder.registerComType({z:3}))
+class TestWorld implements heat.ecs.IWorld {
+    public function new() {
+        trace(ComLabel_TestWorld.getConstructors());
+        trace(ComOptionImpl_TestWorld.getConstructors());
+        trace(this.getCom(1, null));
+        this.setCom(1, null);
+    }
+}
+
 class Main extends buddy.SingleSuite {
     public function new() {
         describe("Worlds provide new, unique int IDs with getId() (starting with 1)", {
@@ -105,6 +127,10 @@ class Main extends buddy.SingleSuite {
                 });
             });
 
+        });
+
+        describe("macro tests", {
+            var world = new TestWorld();
         });
     }
 }

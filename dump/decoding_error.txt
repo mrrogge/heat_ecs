@@ -1,6 +1,157 @@
-{
-	expr: null <- expected value
+[{
+	access: [APublic]
+	doc: null
+	kind: FFun({
+		args: []
+		expr: {
+			expr: EBlock([{
+				expr: ECall({
+					expr: EConst(CIdent(trace))
+					pos: #pos
+				}, [{
+					expr: ECall({
+						expr: EField({
+							expr: EConst(CIdent(ComLabel_TestWorld))
+							pos: #pos
+						}, getConstructors)
+						pos: #pos
+					}, [])
+					pos: #pos
+				}])
+				pos: #pos
+			}, {
+				expr: ECall({
+					expr: EConst(CIdent(trace))
+					pos: #pos
+				}, [{
+					expr: ECall({
+						expr: EField({
+							expr: EConst(CIdent(ComOptionImpl_TestWorld))
+							pos: #pos
+						}, getConstructors)
+						pos: #pos
+					}, [])
+					pos: #pos
+				}])
+				pos: #pos
+			}, {
+				expr: ECall({
+					expr: EConst(CIdent(trace))
+					pos: #pos
+				}, [{
+					expr: ECall({
+						expr: EField({
+							expr: EConst(CIdent(this))
+							pos: #pos
+						}, getCom)
+						pos: #pos
+					}, [{
+						expr: EConst(CInt(1))
+						pos: #pos
+					}, {
+						expr: EConst(CIdent(null))
+						pos: #pos
+					}])
+					pos: #pos
+				}])
+				pos: #pos
+			}, {
+				expr: ECall({
+					expr: EField({
+						expr: EConst(CIdent(this))
+						pos: #pos
+					}, setCom)
+					pos: #pos
+				}, [{
+					expr: EConst(CInt(1))
+					pos: #pos
+				}, {
+					expr: EConst(CIdent(null))
+					pos: #pos
+				}])
+				pos: #pos
+			}])
+			pos: #pos
+		}
+		params: []
+		ret: null
+	})
+	meta: []
+	name: new
+	pos: #pos
+}, {
+	access: [APublic]
+	doc: null
+	kind: FFun({
+		args: [{
+			meta: null
+			name: id
+			opt: false
+			type: TPath({
+				name: EntityId
+				pack: [heat, ecs]
+				params: []
+				sub: null
+			})
+			value: null
+		}, {
+			meta: null
+			name: label
+			opt: false
+			type: TPath({
+				name: ComLabel_TestWorld
+				pack: []
+				params: null
+				sub: null
+			})
+			value: null
+		}]
+		expr: {
+			expr: EReturn({
+				expr: ESwitch({
+					expr: EConst(CIdent(label))
+					pos: #pos
+				}, [], {
+					expr: EField({
+						expr: EField({
+							expr: EField({
+								expr: EConst(CIdent(haxe))
+								pos: #pos
+							}, ds)
+							pos: #pos
+						}, Option)
+						pos: #pos
+					}, None)
+					pos: #pos
+				})
+				pos: #pos
+			})
+			pos: #pos
+		}
+		params: null
+		ret: TPath({
+			name: Option
+			pack: [haxe, ds]
+			params: [TPType(TPath({
+				name: ComOption_TestWorld
+				pack: []
+				params: null
+				sub: null
+			}))]
+			sub: null
+		})
+	})
+	meta: null
+	name: getCom
+	pos: #pos
+}, {
+	access: null
+	doc: null
+	kind: null <- expected value
+	meta: null
+	name: null <- expected value
 	pos: null <- expected value
-}
-line 2: expected value
-line 3: expected value
+}]
+line 150: expected value
+line 152: expected value
+line 153: expected value
