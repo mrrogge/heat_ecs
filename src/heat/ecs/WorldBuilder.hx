@@ -358,42 +358,36 @@ class WorldBuilder {
             values: [macro $i{label}],
             expr: {
                 pos: Context.currentPos(),
-                expr: EBlock([
-                    macro trace('case for $label'),
+                expr: ETernary(
                     {
                         pos: Context.currentPos(),
-                        expr: ETernary(
+                        expr: EBinop(
+                            OpEq, 
                             {
                                 pos: Context.currentPos(),
-                                expr: EBinop(
-                                    OpEq, 
-                                    {
-                                        pos: Context.currentPos(),
-                                        expr: EArray(
-                                            macro $i{'_comMap_$label'},
-                                            macro $i{"id"}
-                                        )
-                                    },
-                                    macro $i{"null"}
+                                expr: EArray(
+                                    macro $i{'_comMap_$label'},
+                                    macro $i{"id"}
                                 )
                             },
-                            macro $i{"None"},
-                            {
+                            macro $i{"null"}
+                        )
+                    },
+                    macro $i{"None"},
+                    {
+                        pos: Context.currentPos(),
+                        expr: ECall(
+                            macro $i{"Some"},
+                            [{
                                 pos: Context.currentPos(),
-                                expr: ECall(
-                                    macro $i{"Some"},
-                                    [{
-                                        pos: Context.currentPos(),
-                                        expr: EArray(
-                                            macro $i{'_comMap_$label'},
-                                            macro $i{"id"}
-                                        )
-                                    }]
+                                expr: EArray(
+                                    macro $i{'_comMap_$label'},
+                                    macro $i{"id"}
                                 )
-                            }
+                            }]
                         )
                     }
-                ])
+                )
             }
         });
         for (field in fields) {

@@ -20,15 +20,9 @@ abstract TestAbstract(Float) from Float to Float {
 
 typedef TestPoint = {x:Float, y:Float};
 
-@:build(heat.ecs.WorldBuilder.registerComType(1, "LABEL"))
-@:build(heat.ecs.WorldBuilder.registerComType(new TestAbstract()))
-@:build(heat.ecs.WorldBuilder.registerComType({x:1, y:2}))
-@:build(heat.ecs.WorldBuilder.registerComType({z:3}))
+@:build(heat.ecs.WorldBuilder.registerComType(new TestClass1(), "TEST"))
 class TestWorld implements heat.ecs.IWorld {
-    public function new() {
-        setCom(1, 2);
-        trace(getCom(1, LABEL));
-    }
+    public function new() {}
 }
 
 class Main extends buddy.SingleSuite {
@@ -70,6 +64,21 @@ class Main extends buddy.SingleSuite {
 
                     it("returns the stored component for that ID", {
                         world.getEnumCom(TestEnum1, testId).should.equal(haxe.ds.Option.Some(testCom));
+                    });
+                });
+            });
+
+            describe("given a world (macro version)", {
+                var world = new TestWorld();
+
+                describe("and a stored class component whose type is registered", {
+                    var testCom = new TestClass1();
+                    var testId = 1;
+                    world.setCom(testId, testCom);
+
+                    it("returns the stored component for that ID and com label", {
+                        var retrievedCom = world.getCom(testId, TEST);
+                        retrievedCom.should.equal(haxe.ds.Option.Some(ComOptionImpl_TestWorld.TEST(testCom)));
                     });
                 });
             });
@@ -123,12 +132,6 @@ class Main extends buddy.SingleSuite {
                     query.result.should.not.contain(id1);
                 });
             });
-
-        });
-
-        describe("macro tests", {
-            var world = new TestWorld();
-            var test:ComOption_TestWorld = null;
         });
     }
 }
