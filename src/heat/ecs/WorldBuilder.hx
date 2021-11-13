@@ -130,7 +130,7 @@ class WorldBuilder {
             pos: Context.currentPos()
         }
         worldGetComFieldDefs[worldClassId] = getComDef;
-        // fields.push(getComDef);
+        fields.push(getComDef);
 
         //build the setCom() method
         var setComDef:haxe.macro.Expr.Field = {
@@ -164,7 +164,7 @@ class WorldBuilder {
             pos: Context.currentPos()
         }
         worldSetComFieldDefs[worldClassId] = setComDef;
-        // fields.push(setComDef);
+        fields.push(setComDef);
 
         Context.onTypeNotFound(s -> {
             return if (s == 'ComLabel_$worldClassId') {
