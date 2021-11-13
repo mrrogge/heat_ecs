@@ -20,19 +20,14 @@ abstract TestAbstract(Float) from Float to Float {
 
 typedef TestPoint = {x:Float, y:Float};
 
-
 @:build(heat.ecs.WorldBuilder.registerComType(1, "LABEL"))
 @:build(heat.ecs.WorldBuilder.registerComType(new TestAbstract()))
 @:build(heat.ecs.WorldBuilder.registerComType({x:1, y:2}))
 @:build(heat.ecs.WorldBuilder.registerComType({z:3}))
 class TestWorld implements heat.ecs.IWorld {
     public function new() {
-        // trace(ComLabel_TestWorld.getConstructors());
-        // trace(heat.ecs.ComLabel_TestWorld_MRR.getConstructors());
-        // trace(ComLabel_TestWorld.getConstructors());
-        // trace(ComOptionImpl_TestWorld.getConstructors());
-        // trace(this.getCom(1, null));
-        // this.setCom(1, null);
+        this._comMap_LABEL[1] = 4;
+        trace(getCom(1, LABEL));
     }
 }
 
