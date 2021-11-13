@@ -245,6 +245,23 @@ class WorldBuilder {
             }
         );
 
+        //modify ComOptionImpl enum
+        var comOptionImplType = worldComOptionImplDefs[worldClassId];
+        comOptionImplType.fields.push(
+            {
+                name: label,
+                kind: FFun({
+                    args: [
+                        {
+                            name: "com",
+                            type: itemType
+                        }
+                    ]
+                }),
+                pos: Context.currentPos()
+            }
+        );
+
         // modify getCom()
         var getComExpr = worldClass.get().findField("getCom");
 
