@@ -20,6 +20,7 @@ class WorldBuilder {
     static var worldGetComFieldDefs = new Map<String, haxe.macro.Expr.Field>();
     static var worldGetComCaseArrays = new Map<String, Array<haxe.macro.Expr.Case>>();
     static var worldSetComFieldDefs = new Map<String, haxe.macro.Expr.Field>();
+    static var worldSetComCaseArrays = new Map<String, Array<haxe.macro.Expr.Case>>();
 
     public static macro function build():Array<haxe.macro.Expr.Field> {
         var fields = haxe.macro.Context.getBuildFields();
@@ -50,6 +51,11 @@ class WorldBuilder {
         if (worldGetComCaseArrays.exists(worldClassId)) return fields;
         else {
             worldGetComCaseArrays[worldClassId] = new Array<haxe.macro.Expr.Case>();
+        }
+
+        if (worldSetComCaseArrays.exists(worldClassId)) return fields;
+        else {
+            worldSetComCaseArrays[worldClassId] = new Array<haxe.macro.Expr.Case>();
         }
 
         //build the ComLabel enum type
@@ -162,7 +168,7 @@ class WorldBuilder {
                             expr: EConst(CIdent("com")),
                             pos: Context.currentPos()
                         },
-                        [],
+                        worldSetComCaseArrays[worldClassId],
                         macro $b{[]}
                     ),
                     pos: Context.currentPos()
@@ -394,6 +400,47 @@ class WorldBuilder {
             if (field.name == "getCom") {
                 fields.remove(field);
                 fields.push(worldGetComFieldDefs[worldClassId]);
+                break;
+            }
+        }
+
+        //modify setCom()
+        var setComCases = worldSetComCaseArrays[worldClassId];
+        setComCases.push({
+            values: [
+                {
+                    pos: Context.currentPos(),
+                    expr: ECall(
+                        {
+                            pos: Context.currentPos(),
+                            expr: EField(
+                                macro $i{'ComOptionImpl_$worldClassId'},
+                                label
+                            )
+                        },
+                        [macro $i{"com"}]
+                    )
+                }
+            ],
+            expr: {
+                pos: Context.currentPos(),
+                expr: EBinop(
+                    OpAssign,
+                    {
+                        pos: Context.currentPos(),
+                        expr: EArray(
+                            macro $i{'_comMap_$label'},
+                            macro $i{"id"}
+                        )
+                    },
+                    macro $i{"com"}
+                )
+            }           
+        });
+        for (field in fields) {
+            if (field.name == "setCom") {
+                fields.remove(field);
+                fields.push(worldSetComFieldDefs[worldClassId]);
                 break;
             }
         }

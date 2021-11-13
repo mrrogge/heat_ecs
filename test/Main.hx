@@ -26,7 +26,7 @@ typedef TestPoint = {x:Float, y:Float};
 @:build(heat.ecs.WorldBuilder.registerComType({z:3}))
 class TestWorld implements heat.ecs.IWorld {
     public function new() {
-        this._comMap_LABEL[1] = 4;
+        setCom(1, 2);
         trace(getCom(1, LABEL));
     }
 }
