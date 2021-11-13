@@ -9,11 +9,15 @@ using StringTools;
 
 class WorldBuilder {
     static var worldLabelIdxMap = new Map<String, Int>();
-    static var worldTypeLabelMap = new Map<String, Map<String, String>>();
+    static var worldTypeToLabelMap = new Map<String, Map<String, String>>();
+    static var worldLabelToTypeMap = new Map<String, Map<String, String>>();
+    static var worldTypeLabels = new Map<String, Map<String, Bool>>();
 
-    static var structMap = new Map<String, String>();
-    static var structIndex = 0;
-    static var labelIndex = 0;
+    static var worldComLabelDefs = new Map<String, haxe.macro.Expr.TypeDefinition>();
+    static var worldComOptionImplDefs = new Map<String, haxe.macro.Expr.TypeDefinition>();
+    static var worldComOptionDefs = new Map<String, haxe.macro.Expr.TypeDefinition>();
+    static var worldGetComFieldDefs = new Map<String, haxe.macro.Expr.Field>();
+    static var worldSetComFieldDefs = new Map<String, haxe.macro.Expr.Field>();
 
     public static macro function build():Array<haxe.macro.Expr.Field> {
         var fields = haxe.macro.Context.getBuildFields();
@@ -26,9 +30,19 @@ class WorldBuilder {
             worldLabelIdxMap[worldClassId] = 0;
         }
 
-        if (worldTypeLabelMap.exists(worldClassId)) return fields;
+        if (worldTypeToLabelMap.exists(worldClassId)) return fields;
         else {
-            worldTypeLabelMap[worldClassId] = new Map<String, String>();
+            worldTypeToLabelMap[worldClassId] = new Map<String, String>();
+        }
+
+        if (worldLabelToTypeMap.exists(worldClassId)) return fields;
+        else {
+            worldLabelToTypeMap[worldClassId] = new Map<String, String>();
+        }
+
+        if (worldTypeLabels.exists(worldClassId)) return fields;
+        else {
+            worldTypeLabels[worldClassId] = new Map<String, Bool>();
         }
 
         //build the ComLabel enum type
@@ -39,11 +53,11 @@ class WorldBuilder {
             kind: TDEnum,
             fields: []
         }
-        Context.defineType(comLabelDef);
         var comLabelType:haxe.macro.Expr.ComplexType = TPath({
             pack: [],
             name: 'ComLabel_$worldClassId'
         });
+        worldComLabelDefs[worldClassId] = comLabelDef;
 
         //build the ComOptionImpl enum type
         var comOptionImplDef:haxe.macro.Expr.TypeDefinition = {
@@ -53,11 +67,11 @@ class WorldBuilder {
             kind: TDEnum,
             fields: []
         }
-        Context.defineType(comOptionImplDef);
         var comOptionImplType:haxe.macro.Expr.ComplexType = TPath({
             pack: [],
             name: 'ComOptionImpl_$worldClassId'
         });
+        worldComOptionImplDefs[worldClassId] = comOptionImplDef;
 
         //build the ComOption abstract type
         var comOptionDef:haxe.macro.Expr.TypeDefinition = {
@@ -69,11 +83,11 @@ class WorldBuilder {
             ),
             fields: []
         }
-        Context.defineType(comOptionDef);
         var comOptionType:haxe.macro.Expr.ComplexType = TPath({
             pack: [],
             name: 'ComOption_$worldClassId'
         });
+        worldComOptionDefs[worldClassId] = comOptionDef;
 
         //build the getCom() method
         var getComRetType:haxe.macro.Expr.ComplexType = TPath({
@@ -115,7 +129,8 @@ class WorldBuilder {
             }),
             pos: Context.currentPos()
         }
-        fields.push(getComDef);
+        worldGetComFieldDefs[worldClassId] = getComDef;
+        // fields.push(getComDef);
 
         //build the setCom() method
         var setComDef:haxe.macro.Expr.Field = {
@@ -148,7 +163,27 @@ class WorldBuilder {
             }),
             pos: Context.currentPos()
         }
-        fields.push(setComDef);
+        worldSetComFieldDefs[worldClassId] = setComDef;
+        // fields.push(setComDef);
+
+        Context.onTypeNotFound(s -> {
+            return if (s == 'ComLabel_$worldClassId') {
+                trace('building $s');
+                worldComLabelDefs[worldClassId];
+            }
+            else if (s == 'ComOptionImpl_$worldClassId') {
+                trace('building $s');
+                worldComOptionImplDefs[worldClassId];
+            }
+            else if (s == 'ComOption_$worldClassId') {
+                trace('building $s');
+                worldComOptionDefs[worldClassId];
+            }
+            else {
+                // trace('unknown type: $s');
+                null;
+            }
+        });
 
         return fields;
     }
@@ -156,22 +191,29 @@ class WorldBuilder {
     public static macro function registerComType<T>
     (item:haxe.macro.Expr.ExprOf<T>, ?label:String):Array<haxe.macro.Expr.Field> {
         var fields = haxe.macro.Context.getBuildFields();
-        if (label == null) label = 'T${labelIndex++}';
-        trace(label);
-        var itemType = haxe.macro.Context.typeof(item).toComplexType();
-        var typeId:Null<String> = null;
-        switch itemType {
-            case TAnonymous(fields): {
-                typeId = itemType.toString();
-                if (structMap.exists(typeId)) typeId = structMap[typeId];
-                else {
-                    structMap[typeId] = '_struct${structIndex++}';
-                    typeId = structMap[typeId];
-                }
-            }
-            default: typeId = itemType.toString().replace(".", "_");
+        
+        var worldClass = Context.getLocalClass();
+        var worldClassId = worldClass.toString().replace(".", "_");
+
+        if (label == null) {
+            label = 'T${worldLabelIdxMap[worldClassId]++}';
         }
-        trace('registering type: $typeId...');
+        var itemType = haxe.macro.Context.typeof(item).toComplexType();
+        var itemTypeId = itemType.toString();
+        if (worldTypeToLabelMap[worldClassId].exists(itemTypeId) 
+        || worldLabelToTypeMap[worldClassId].exists(label)) 
+        {
+            throw Context.error('Type "$itemTypeId" already registered to a label.', Context.currentPos());
+        }
+        worldTypeToLabelMap[worldClassId][itemTypeId] = label;
+        worldLabelToTypeMap[worldClassId][label] = itemTypeId;
+        if (worldTypeLabels[worldClassId].exists(label)) {
+            throw Context.error('Duplicate label "$label"; labels must be unique.', Context.currentPos());
+        }
+        worldTypeLabels[worldClassId][label] = true;
+
+        trace('registering type: $itemTypeId...');
+
         var mapType:haxe.macro.Expr.ComplexType = TPath({
             name: "Map",
             params: [TPType(macro : heat.ecs.EntityId), TPType(itemType)],
@@ -185,15 +227,17 @@ class WorldBuilder {
             }, []),
             pos: haxe.macro.Context.currentPos()
         }
-        fields.push({
-            name: '_comMap_$typeId',
-            kind: FVar(mapType, mapExpr),
-            pos: haxe.macro.Context.currentPos()
-        });
+        // fields.push({
+        //     name: '_comMap_$label',
+        //     kind: FVar(mapType, mapExpr),
+        //     pos: haxe.macro.Context.currentPos()
+        // });
+
+        //modify ComLabel enum
+        // var comLabelType = Context.getType('ComLabel_$worldClassId').toComplexType();
 
         // modify getCom()
-        var cls = haxe.macro.Context.getLocalClass().get();
-        var getComExpr = cls.findField("getCom");
+        var getComExpr = worldClass.get().findField("getCom");
 
         return fields;
     }

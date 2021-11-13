@@ -27,10 +27,12 @@ typedef TestPoint = {x:Float, y:Float};
 @:build(heat.ecs.WorldBuilder.registerComType({z:3}))
 class TestWorld implements heat.ecs.IWorld {
     public function new() {
-        trace(ComLabel_TestWorld.getConstructors());
-        trace(ComOptionImpl_TestWorld.getConstructors());
-        trace(this.getCom(1, null));
-        this.setCom(1, null);
+        // trace(ComLabel_TestWorld.getConstructors());
+        // trace(heat.ecs.ComLabel_TestWorld_MRR.getConstructors());
+        // trace(ComLabel_TestWorld.getConstructors());
+        // trace(ComOptionImpl_TestWorld.getConstructors());
+        // trace(this.getCom(1, null));
+        // this.setCom(1, null);
     }
 }
 
@@ -131,6 +133,7 @@ class Main extends buddy.SingleSuite {
 
         describe("macro tests", {
             var world = new TestWorld();
+            var test:ComOption_TestWorld = null;
         });
     }
 }
