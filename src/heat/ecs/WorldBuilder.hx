@@ -262,6 +262,86 @@ class WorldBuilder {
             }
         );
 
+        //modify ComOption abstract
+        var comOptionType = worldComOptionDefs[worldClassId];
+        comOptionType.fields.push({
+            name: 'from$label',
+            access: [APublic, AStatic, AInline],
+            kind: FFun({
+                args: [{
+                    name: "com",
+                    type: itemType
+                }],
+                ret: TPath({
+                    pack: [],
+                    name: comOptionType.name
+                }),
+                expr: {
+                    expr: EReturn({
+                        expr: ECall(
+                            {
+                                expr: EField(
+                                    {
+                                        expr: EConst(
+                                            CIdent(comOptionImplType.name)
+                                        ),
+                                        pos: Context.currentPos()
+                                    },
+                                    label
+                                ),
+                                pos: Context.currentPos()
+                            },
+                            [{
+                                expr: EConst(CIdent("com")),
+                                pos: Context.currentPos()
+                            }]
+                        ),                        
+                        pos: Context.currentPos()
+                    }),
+                    pos: Context.currentPos()
+                }
+            }),
+            pos: Context.currentPos(),
+            meta: [{
+                name: ":from",
+                pos: Context.currentPos()
+            }]
+        });
+
+        comOptionType.fields.push({
+            name: 'to$label',
+            access: [AInline, APublic],
+            pos: Context.currentPos(),
+            meta: [{
+                name: ":to",
+                pos: Context.currentPos()
+            }],
+            kind: FFun({
+                args: [],
+                ret: itemType,
+                expr: {
+                    pos: Context.currentPos(),
+                    expr: EReturn({
+                        pos: Context.currentPos(),
+                        expr: ESwitch(
+                            macro $i{"this"}, 
+                            [{
+                                values: [{
+                                    pos: Context.currentPos(),
+                                    expr: ECall(
+                                        macro $i{label},
+                                        [macro $i{"com"}]
+                                    )
+                                }],
+                                expr: macro $i{"com"}
+                            }],
+                            macro $i{"null"}
+                        )
+                    })
+                }
+            })
+        });
+
         // modify getCom()
         var getComExpr = worldClass.get().findField("getCom");
 
