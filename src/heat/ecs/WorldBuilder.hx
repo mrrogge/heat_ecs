@@ -227,14 +227,23 @@ class WorldBuilder {
             }, []),
             pos: haxe.macro.Context.currentPos()
         }
-        // fields.push({
-        //     name: '_comMap_$label',
-        //     kind: FVar(mapType, mapExpr),
-        //     pos: haxe.macro.Context.currentPos()
-        // });
+        fields.push({
+            name: '_comMap_$label',
+            kind: FVar(mapType, mapExpr),
+            pos: haxe.macro.Context.currentPos()
+        });
 
         //modify ComLabel enum
-        // var comLabelType = Context.getType('ComLabel_$worldClassId').toComplexType();
+        var comLabelType = worldComLabelDefs[worldClassId];
+        comLabelType.fields.push(
+            {
+                name: label,
+                kind: FFun({
+                    args: []
+                }),
+                pos: Context.currentPos()
+            }
+        );
 
         // modify getCom()
         var getComExpr = worldClass.get().findField("getCom");
