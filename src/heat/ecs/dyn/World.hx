@@ -1,4 +1,4 @@
-package heat.ecs;
+package heat.ecs.dyn;
 
 class World {
     var classComs = new Map<String, Map<EntityId, Dynamic>>();

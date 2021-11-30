@@ -1,4 +1,4 @@
-package heat.ecs;
+package heat.ecs.dyn;
 
 typedef EComChange = {
     final id:EntityId;

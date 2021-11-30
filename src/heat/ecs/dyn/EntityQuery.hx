@@ -1,4 +1,4 @@
-package heat.ecs;
+package heat.ecs.dyn;
 
 import haxe.ds.Either;
 
