@@ -1,0 +1,8 @@
+-cp src
+-L buddy
+-L heat_event
+-D doc-gen
+--macro include('heat')
+--no-output
+--xml bin/types.xml
+--hl dummy
