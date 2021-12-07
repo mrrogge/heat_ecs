@@ -4,6 +4,7 @@
 -L heat_event
 -D analyzer-optimize
 -D buddy-colors
---macro heat.ecs.ComQueryBuilder.buildUpTo(5)
 --interp
 --main Main
+
+--macro heat.ecs.ComQueryBuilder.buildUpTo(5)
