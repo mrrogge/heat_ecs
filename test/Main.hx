@@ -106,9 +106,9 @@ class Main extends buddy.SingleSuite {
                 });
             });
         });
-        var x = new heat.ecs.ComQueryAlt2<Int, String>(
-            new Map<heat.ecs.EntityId, Int>(),
-            new Map<heat.ecs.EntityId, String>()
-        );
+
+        var world = new heat.ecs.World();
+        trace(world.getCom("test", 1));
+        trace(world.getCom(TestClass1, "two"));
     };
 }

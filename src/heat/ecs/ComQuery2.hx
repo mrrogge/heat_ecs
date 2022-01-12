@@ -6,13 +6,13 @@ import haxe.ds.Either;
     An implementation of `IComQuery` for two `ComMap`s.
 **/
 class ComQuery2<T0, T1> implements IComQuery {
-    public var map0(default, null):IComMap<T0>;
-    public var map1(default, null):IComMap<T1>;
+    public var map0(default, null):Map<EntityId, T0>;
+    public var map1(default, null):Map<EntityId, T1>;
 
     @:inheritDoc(IComQuery.result)
     public var result(default, null) = new Array<EntityId>();
 
-    public function new(map0:IComMap<T0>, map1:IComMap<T1>) {
+    public function new(map0:Map<EntityId, T0>, map1:Map<EntityId, T1>) {
         this.map0 = map0;
         this.map1 = map1;
     }

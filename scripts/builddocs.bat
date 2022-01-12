@@ -1,2 +1,2 @@
 haxe builddocs.hxml
-haxelib run dox -i bin --toplevel-package heat -o bin/apidoc
+lix run dox -i bin --toplevel-package heat -o bin/apidoc
