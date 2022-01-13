@@ -37,6 +37,10 @@ private class TestWorld1 {   // implements IWorld
             default: {}
         }
     }
+
+    public function buildQuery():EntityQuery_TestWorld1 {
+        return new EntityQuery_TestWorld1(this);
+    }
 }
 
 /**
@@ -55,6 +59,25 @@ from ComOptionImpl_TestWorld1
 to ComOptionImpl_TestWorld1
 {
 
+}
+
+private class EntityQuery_TestWorld1 {
+    var withLabels = new Array<ComLabel_TestWorld1>();
+    var withLabelMap = new Map<ComLabel_TestWorld1, Bool>();
+    var world:TestWorld1;
+
+    public function new(world:TestWorld1) {
+        this.world = world;
+    }
+
+    public function with(label:ComLabel_TestWorld1):EntityQuery_TestWorld1 {
+        if (withLabelMap.exists(label)) return this;
+        withLabelMap[label] = true;
+        withLabels.push(label);
+        return this;
+    }
+
+    
 }
 
 /**
