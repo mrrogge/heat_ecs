@@ -1,4 +1,4 @@
-package heat.ecs.dyn;
+package heat.ecs;
 
 enum ComType<TClass, TEnum> {
     CLASS(cls:Class<TClass>);

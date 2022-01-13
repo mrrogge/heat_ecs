@@ -17,7 +17,7 @@ class Main extends buddy.SingleSuite {
     public function new() {
         describe("Worlds provide new, unique int IDs with getId() (starting with 1)", {
             describe("given a world", {
-                var world = new heat.ecs.dyn.World();
+                var world = new heat.ecs.World();
 
                 it("returns 1 for the first ID", {
                     var expected:heat.ecs.EntityId = 1;
@@ -33,7 +33,7 @@ class Main extends buddy.SingleSuite {
 
         describe("Worlds store and recall components for an ID", {
             describe("given a world", {
-                var world = new heat.ecs.dyn.World();
+                var world = new heat.ecs.World();
 
                 describe("and a stored class component", {
                     var testCom = new TestClass1();
@@ -59,7 +59,7 @@ class Main extends buddy.SingleSuite {
 
         describe("Queries return IDs that meet all criteria", {
             describe("given a world with two entities, each with two components", {
-                var world = new heat.ecs.dyn.World();
+                var world = new heat.ecs.World();
                 var id1:heat.ecs.EntityId = 1;
                 var id2:heat.ecs.EntityId = 2;
                 world.setClassCom(TestClass1, id1, new TestClass1());
@@ -68,7 +68,7 @@ class Main extends buddy.SingleSuite {
                 world.setClassCom(TestClass2, id2, new TestClass2());
                 
                 it("a query for those classes returns both IDs", {
-                    var query = new heat.ecs.dyn.EntityQuery(world)
+                    var query = new heat.ecs.EntityQuery(world)
                     .with(TestClass1)
                     .with(TestClass2);
                     query.run();
@@ -77,7 +77,7 @@ class Main extends buddy.SingleSuite {
             });
 
             describe("given a world with two entities, one with two components, and another with only one", {
-                var world = new heat.ecs.dyn.World();
+                var world = new heat.ecs.World();
                 var id1:heat.ecs.EntityId = 1;
                 var id2:heat.ecs.EntityId = 2;
                 world.setClassCom(TestClass1, id1, new TestClass1());
@@ -85,7 +85,7 @@ class Main extends buddy.SingleSuite {
                 world.setClassCom(TestClass1, id2, new TestClass1());
 
                 it("a query for those classes returns only the first ID", {
-                    var query = new heat.ecs.dyn.EntityQuery(world)
+                    var query = new heat.ecs.EntityQuery(world)
                     .with(TestClass1)
                     .with(TestClass2);
                     query.run();
@@ -94,21 +94,17 @@ class Main extends buddy.SingleSuite {
             });
 
             describe("given a world with a component for some entity", {
-                var world = new heat.ecs.dyn.World();
+                var world = new heat.ecs.World();
                 var id1:heat.ecs.EntityId = 1;
                 world.setClassCom(TestClass1, id1, new TestClass1());
 
                 it("a query for a different component should not return that ID", {
-                    var query = new heat.ecs.dyn.EntityQuery(world)
+                    var query = new heat.ecs.EntityQuery(world)
                     .with(TestClass2);
                     query.run();
                     query.result.should.not.contain(id1);
                 });
             });
         });
-
-        var world = new heat.ecs.World();
-        trace(world.getCom("test", 1));
-        trace(world.getCom(TestClass1, "two"));
     };
 }

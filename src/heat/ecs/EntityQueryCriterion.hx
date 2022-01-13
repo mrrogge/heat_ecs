@@ -1,4 +1,4 @@
-package heat.ecs.dyn;
+package heat.ecs;
 
 enum EntityQueryCriterion {
     WITH_CLASS(cls:Class<Dynamic>);
