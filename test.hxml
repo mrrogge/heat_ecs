@@ -4,5 +4,6 @@
 -L heat_event
 -D analyzer-optimize
 -D buddy-colors
+extraParams.hxml
 --interp
 --main Main

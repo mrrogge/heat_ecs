@@ -25,14 +25,6 @@ to Either<String, Int> {
         }
     }
 
-    @:to
-    inline public function toInt():Null<Int> {
-        return switch (this) {
-            case Left(s): null;
-            case Right(i): return i;
-        }
-    }
-
     @:op(a == b) public static inline function eq(a:EntityId, b:EntityId):Bool {
         return switch a {
             case Left(a): switch b {
