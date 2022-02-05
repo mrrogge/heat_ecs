@@ -15,11 +15,6 @@ enum TestEnum1 {
 
 class Main extends buddy.SingleSuite {
     public function new() {
-
-        var comMapGroup = new heat.ecs.ComMapGroup2(
-            new heat.ecs.ComMap<TestClass1>(), 
-            new heat.ecs.ComMap<TestClass2>());
-
         describe("ComQuery instances return all entity IDs with matching coms", {
             describe("given 2 com maps each with coms for the same 2 entities", {
                 var map0 = new Map<heat.ecs.EntityId, TestClass1>();
