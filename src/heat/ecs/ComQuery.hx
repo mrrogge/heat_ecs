@@ -3,14 +3,14 @@ package heat.ecs;
 class ComQuery {
     public var result(default, null) = new Array<EntityId>();
 
-    var withMaps =  new Array<Map<EntityId, Dynamic>>();
-    var withoutMaps = new Array<Map<EntityId, Dynamic>>();
+    var withMaps =  new Array<Map<EntityId, Any>>();
+    var withoutMaps = new Array<Map<EntityId, Any>>();
 
     public function new() {
 
     }
 
-    public function with(comMap:Map<EntityId, Dynamic>):ComQuery {
+    public function with(comMap:Map<EntityId, Any>):ComQuery {
         for (map in withMaps) {
             if (comMap == map) return this;
         }
@@ -18,7 +18,7 @@ class ComQuery {
         return this;
     }
 
-    public function without(comMap:Map<EntityId, Dynamic>):ComQuery {
+    public function without(comMap:Map<EntityId, Any>):ComQuery {
         for (map in withoutMaps) {
             if (comMap == map) return this;
         }
