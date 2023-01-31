@@ -3,36 +3,38 @@ package heat.ecs;
 class ComQuery {
     public var result(default, null) = new Array<EntityId>();
 
-    var withMaps =  new Array<Map<EntityId, Any>>();
-    var withoutMaps = new Array<Map<EntityId, Any>>();
+    var withMapArray =  new Array<Map<EntityId, Any>>();
+    var withMaps = new Map<Map<EntityId, Any>, Bool>();
+    var withoutMapArray = new Array<Map<EntityId, Any>>();
+    var withoutMaps = new Map<Map<EntityId, Any>, Bool>();
 
     public function new() {
 
     }
 
     public function with(comMap:Map<EntityId, Any>):ComQuery {
-        for (map in withMaps) {
+        for (map in withMapArray) {
             if (comMap == map) return this;
         }
-        withMaps.push(comMap);
+        withMapArray.push(comMap);
         return this;
     }
 
     public function without(comMap:Map<EntityId, Any>):ComQuery {
-        for (map in withoutMaps) {
+        for (map in withoutMapArray) {
             if (comMap == map) return this;
         }
-        withoutMaps.push(comMap);
+        withoutMapArray.push(comMap);
         return this;
     }
 
     public function run():ComQuery {
         while (result.length > 0) result.pop();
-        var firstMap = withMaps[0];
+        var firstMap = withMapArray[0];
         if (firstMap == null) return this;
         for (id => _ in firstMap) {
             var hasAllRequiredComs = true;
-            for (map in withMaps) {
+            for (map in withMapArray) {
                 if (map == firstMap) continue;
                 if (!map.exists(id)) {
                     hasAllRequiredComs = false;
@@ -41,7 +43,7 @@ class ComQuery {
             }
             if (!hasAllRequiredComs) continue;
             var hasNoDisallowedComs = true;
-            for (map in withoutMaps) {
+            for (map in withoutMapArray) {
                 if (map.exists(id)) {
                     hasNoDisallowedComs = false;
                     break;
@@ -59,10 +61,10 @@ class ComQuery {
     }
 
     public function checkId(id:EntityId):Bool {
-        for (map in withMaps) {
+        for (map in withMapArray) {
             if (!map.exists(id)) return false;
         }
-        for (map  in withoutMaps) {
+        for (map  in withoutMapArray) {
             if (map.exists(id)) return false;
         }
         return true;
