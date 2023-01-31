@@ -4,9 +4,9 @@ class ComQuery {
     public final result = new Array<EntityId>();
 
     final withMapArray =  new Array<Map<EntityId, Any>>();
-    final withMaps = new Map<Map<EntityId, Any>, Bool>();
+    final withMaps = new Map<haxe.ds.IntMap<Any>, Bool>();
     final withoutMapArray = new Array<Map<EntityId, Any>>();
-    final withoutMaps = new Map<Map<EntityId, Any>, Bool>();
+    final withoutMaps = new Map<haxe.ds.IntMap<Any>, Bool>();
 
     public function new() {
 
