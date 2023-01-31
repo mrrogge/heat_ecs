@@ -13,17 +13,15 @@ class ComQuery {
     }
 
     public function with(comMap:Map<EntityId, Any>):ComQuery {
-        for (map in withMapArray) {
-            if (comMap == map) return this;
-        }
+        if (withMaps.exists(comMap)) return this;
+        withMaps[comMap] = true;
         withMapArray.push(comMap);
         return this;
     }
 
     public function without(comMap:Map<EntityId, Any>):ComQuery {
-        for (map in withoutMapArray) {
-            if (comMap == map) return this;
-        }
+        if (withoutMaps.exists(comMap)) return this;
+        withoutMaps[comMap] = true;
         withoutMapArray.push(comMap);
         return this;
     }
