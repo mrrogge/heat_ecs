@@ -1,12 +1,12 @@
 package heat.ecs;
 
 class ComQuery {
-    public var result(default, null) = new Array<EntityId>();
+    public final result = new Array<EntityId>();
 
-    var withMapArray =  new Array<Map<EntityId, Any>>();
-    var withMaps = new Map<Map<EntityId, Any>, Bool>();
-    var withoutMapArray = new Array<Map<EntityId, Any>>();
-    var withoutMaps = new Map<Map<EntityId, Any>, Bool>();
+    final withMapArray =  new Array<Map<EntityId, Any>>();
+    final withMaps = new Map<Map<EntityId, Any>, Bool>();
+    final withoutMapArray = new Array<Map<EntityId, Any>>();
+    final withoutMaps = new Map<Map<EntityId, Any>, Bool>();
 
     public function new() {
 
