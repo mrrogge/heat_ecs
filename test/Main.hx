@@ -98,5 +98,22 @@ class Main extends buddy.SingleSuite {
                 });
             });
         });
+
+        describe("ComQuery instances return all IDs with com values that match the specified withEqual condition", {
+            var map0 = new Map<heat.ecs.EntityId, String>();
+            var id1 = 1;
+            var id2 = 2;
+            var valueToMatch = "matched value";
+            map0[id1] = valueToMatch;
+            map0[id2] = "Not the same value";
+            var query = new heat.ecs.ComQuery().withEqual(map0, valueToMatch);
+            query.run();
+            it("", {
+                query.result.should.contain(id1);
+            });
+            it ("", {
+                query.result.should.not.contain(id2);
+            });
+        });
     };
 }
