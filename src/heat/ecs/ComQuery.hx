@@ -8,6 +8,9 @@ class ComQuery {
     final withoutMapArray = new Array<Map<EntityId, Any>>();
     final withoutMaps = new Map<haxe.ds.IntMap<Any>, Bool>();
 
+    final withEqualCondArray = new Array<WithEqualCondition<Any>>();
+    final withEqualCondMap = new Map<haxe.ds.IntMap<Any>, WithEqualCondition<Any>>();
+
     public function new() {
 
     }
@@ -16,6 +19,19 @@ class ComQuery {
         if (withMaps.exists(comMap)) return this;
         withMaps[comMap] = true;
         withMapArray.push(comMap);
+        return this;
+    }
+
+    @:generic
+    public function withEqual<T>(comMap:Map<EntityId, T>, value:T):ComQuery {
+        with(comMap);
+        if (withEqualCondMap.exists(comMap)) {
+            withEqualCondMap[comMap].value = value;
+        }
+        else {
+            withEqualCondMap[comMap] = new WithEqualCondition(comMap, value);
+            withEqualCondArray.push(withEqualCondMap[comMap]);
+        }
         return this;
     }
 
@@ -31,6 +47,7 @@ class ComQuery {
         var firstMap = withMapArray[0];
         if (firstMap == null) return this;
         for (id => _ in firstMap) {
+            // check against all "with" conditions
             var hasAllRequiredComs = true;
             for (map in withMapArray) {
                 if (map == firstMap) continue;
@@ -40,6 +57,8 @@ class ComQuery {
                 }
             }
             if (!hasAllRequiredComs) continue;
+
+            // check against all "without" conditions
             var hasNoDisallowedComs = true;
             for (map in withoutMapArray) {
                 if (map.exists(id)) {
@@ -48,6 +67,15 @@ class ComQuery {
                 }
             }
             if (!hasNoDisallowedComs) continue;
+
+            // check against all "withEqual" conditions
+            var hasAllRequiredComVals = true;
+            for (cond in withEqualCondArray) {
+                hasAllRequiredComVals = hasAllRequiredComVals && cond.check(id);
+                if (!hasAllRequiredComVals) break;
+            }
+            if (!hasAllRequiredComVals) continue;
+
             result.push(id);
         }
         return this;
@@ -66,5 +94,19 @@ class ComQuery {
             if (map.exists(id)) return false;
         }
         return true;
+    }
+}
+
+private class WithEqualCondition<T> {
+    public var comMap:Map<EntityId, T>;
+    public var value:T;
+
+    public function new(comMap:Map<EntityId, T>, value:T) {
+        this.comMap = comMap;
+        this.value = value;
+    }
+
+    public function check(id:EntityId):Bool {
+        return comMap.exists(id) && comMap[id] == value;
     }
 }
