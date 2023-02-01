@@ -18,9 +18,7 @@ class ComQuery {
     }
 
     public function with(comMap:Map<EntityId, Any>):ComQuery {
-        if (withMaps.exists(comMap)) return this;
-        withMaps[comMap] = true;
-        withMapArray.push(comMap);
+        condArray.push(new WithCondition(comMap));
         return this;
     }
 
