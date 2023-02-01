@@ -24,14 +24,7 @@ class ComQuery {
 
     @:generic
     public function whereEqualTo<T>(comMap:Map<EntityId, T>, value:T):ComQuery {
-        with(comMap);
-        if (withEqualCondMap.exists(comMap)) {
-            withEqualCondMap[comMap].value = value;
-        }
-        else {
-            withEqualCondMap[comMap] = new WhereEqualToCondition(comMap, value);
-            withEqualCondArray.push(withEqualCondMap[comMap]);
-        }
+        condArray.push(new WhereEqualToCondition(comMap, value));
         return this;
     }
 
