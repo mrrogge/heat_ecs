@@ -97,6 +97,62 @@ class ComQuery {
     }
 }
 
+private abstract class Condition {
+    public abstract function check(id:EntityId):Bool;
+}
+
+private class WithCondition extends Condition {
+    public final comMap:Map<EntityId, Any>;
+    
+    public function new(comMap:Map<EntityId, Any>) {
+        this.comMap = comMap;
+    }
+
+    public function check(id:EntityId):Bool {
+        return comMap.exists(id);
+    }
+}
+
+private class WithoutCondition extends Condition {
+    public final comMap:Map<EntityId, Any>;
+    
+    public function new(comMap:Map<EntityId, Any>) {
+        this.comMap = comMap;
+    }
+
+    public function check(id:EntityId):Bool {
+        return !comMap.exists(id);
+    }
+}
+
+private class WhereEqualToCondition<T> extends Condition {
+    public final comMap:Map<EntityId, T>;
+    public final value:T;
+    
+    public function new(comMap:Map<EntityId, T>, value:T) {
+        this.comMap = comMap;
+        this.value = value;
+    }
+
+    public function check(id:EntityId):Bool {
+        return comMap.exists(id) && comMap[id] == value;
+    }
+}
+
+private class WhereNotEqualToCondition<T> extends Condition {
+    public final comMap:Map<EntityId, T>;
+    public final value:T;
+    
+    public function new(comMap:Map<EntityId, T>, value:T) {
+        this.comMap = comMap;
+        this.value = value;
+    }
+
+    public function check(id:EntityId):Bool {
+        return !comMap.exists(id) || comMap[id] != value;
+    }
+}
+
 private class WithEqualCondition<T> {
     public var comMap:Map<EntityId, T>;
     public var value:T;
