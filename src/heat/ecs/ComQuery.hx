@@ -41,40 +41,34 @@ class ComQuery {
 
     public function run():ComQuery {
         while (result.length > 0) result.pop();
-        var firstMap = withMapArray[0];
+
+        var firstMap:Null<ComMap<Any>> = null;
+        for (cond in condArray) {
+            var whereEqualToCond:WhereEqualToCondition<Any> = Std.downcast(
+                cond, WhereEqualToCondition);
+            if (whereEqualToCond != null) {
+                firstMap = whereEqualToCond.comMap;
+                break;
+            }
+            var withCond = Std.downcast(cond, WithCondition);
+            if (withCond != null) {
+                firstMap = withCond.comMap;
+                break;
+            }
+        }
+
         if (firstMap == null) return this;
+
         for (id => _ in firstMap) {
-            // check against all "with" conditions
-            var hasAllRequiredComs = true;
-            for (map in withMapArray) {
-                if (map == firstMap) continue;
-                if (!map.exists(id)) {
-                    hasAllRequiredComs = false;
-                    break;
-                }
+            var satisfiesAllConds = true;
+            for (cond in condArray) {
+                satisfiesAllConds = satisfiesAllConds && cond.check(id);
+                if (!satisfiesAllConds) break;
             }
-            if (!hasAllRequiredComs) continue;
-
-            // check against all "without" conditions
-            var hasNoDisallowedComs = true;
-            for (map in withoutMapArray) {
-                if (map.exists(id)) {
-                    hasNoDisallowedComs = false;
-                    break;
-                }
-            }
-            if (!hasNoDisallowedComs) continue;
-
-            // check against all "withEqual" conditions
-            var hasAllRequiredComVals = true;
-            for (cond in withEqualCondArray) {
-                hasAllRequiredComVals = hasAllRequiredComVals && cond.check(id);
-                if (!hasAllRequiredComVals) break;
-            }
-            if (!hasAllRequiredComVals) continue;
-
+            if (!satisfiesAllConds) continue;
             result.push(id);
         }
+
         return this;
     }
 
