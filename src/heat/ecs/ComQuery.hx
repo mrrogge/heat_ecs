@@ -29,9 +29,7 @@ class ComQuery {
     }
 
     public function without(comMap:Map<EntityId, Any>):ComQuery {
-        if (withoutMaps.exists(comMap)) return this;
-        withoutMaps[comMap] = true;
-        withoutMapArray.push(comMap);
+        condArray.push(new WithoutCondition(comMap));
         return this;
     }
 
