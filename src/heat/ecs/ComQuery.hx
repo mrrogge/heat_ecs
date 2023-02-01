@@ -8,8 +8,8 @@ class ComQuery {
     final withoutMapArray = new Array<Map<EntityId, Any>>();
     final withoutMaps = new Map<haxe.ds.IntMap<Any>, Bool>();
 
-    final withEqualCondArray = new Array<WithEqualCondition<Any>>();
-    final withEqualCondMap = new Map<haxe.ds.IntMap<Any>, WithEqualCondition<Any>>();
+    final withEqualCondArray = new Array<WhereEqualToCondition<Any>>();
+    final withEqualCondMap = new Map<haxe.ds.IntMap<Any>, WhereEqualToCondition<Any>>();
 
     public function new() {
 
@@ -29,7 +29,7 @@ class ComQuery {
             withEqualCondMap[comMap].value = value;
         }
         else {
-            withEqualCondMap[comMap] = new WithEqualCondition(comMap, value);
+            withEqualCondMap[comMap] = new WhereEqualToCondition(comMap, value);
             withEqualCondArray.push(withEqualCondMap[comMap]);
         }
         return this;
