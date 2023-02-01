@@ -11,6 +11,8 @@ class ComQuery {
     final withEqualCondArray = new Array<WhereEqualToCondition<Any>>();
     final withEqualCondMap = new Map<haxe.ds.IntMap<Any>, WhereEqualToCondition<Any>>();
 
+    final condArray = new Array<Condition>();
+
     public function new() {
 
     }
