@@ -2,15 +2,6 @@ package heat.ecs;
 
 class ComQuery {
     public final result = new Array<EntityId>();
-
-    final withMapArray =  new Array<Map<EntityId, Any>>();
-    final withMaps = new Map<haxe.ds.IntMap<Any>, Bool>();
-    final withoutMapArray = new Array<Map<EntityId, Any>>();
-    final withoutMaps = new Map<haxe.ds.IntMap<Any>, Bool>();
-
-    final withEqualCondArray = new Array<WhereEqualToCondition<Any>>();
-    final withEqualCondMap = new Map<haxe.ds.IntMap<Any>, WhereEqualToCondition<Any>>();
-
     final condArray = new Array<Condition>();
 
     public function new() {
