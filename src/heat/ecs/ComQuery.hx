@@ -69,11 +69,8 @@ class ComQuery {
     }
 
     public function checkId(id:EntityId):Bool {
-        for (map in withMapArray) {
-            if (!map.exists(id)) return false;
-        }
-        for (map  in withoutMapArray) {
-            if (map.exists(id)) return false;
+        for (cond in condArray) {
+            if (!cond.check(id)) return false;
         }
         return true;
     }
