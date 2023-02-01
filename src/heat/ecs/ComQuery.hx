@@ -33,6 +33,12 @@ class ComQuery {
         return this;
     }
 
+    @:generic
+    public function whereNotEqualTo<T>(comMap:Map<EntityId, T>, value:T):ComQuery {
+        condArray.push(new WhereNotEqualToCondition(comMap, value));
+        return this;
+    }
+
     public function run():ComQuery {
         while (result.length > 0) result.pop();
         var firstMap = withMapArray[0];
